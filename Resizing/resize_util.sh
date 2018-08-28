@@ -11,7 +11,14 @@ dateStr=`date +%Y-%m-%d:%H:%M:%S`
 
 # Description: Used (in linux / OSX / system with ImageMagick's convert)
 # to resize the tiff and pdfs so they are the appropariate width (3.25 or 6.75
-# inches). Assumes the data is in the Scratch/ directory under perknas2/4Patrick
+# inches). 
+
+# note: assumes that ImageMagic convert is on the path. It can be downloaded
+# at https://www.imagemagick.org/script/download.php
+# note that during the install, you *should* install the 'legacy' libraries
+
+# I then put it on the path via
+# export PATH="/c/Program Files/ImageMagick-7.0.8-Q16/:$PATH"
 
 function resize_single(){
     # Arguments:
@@ -21,14 +28,14 @@ function resize_single(){
     local new_width_inches="${2}"
     if [[ "$in_file" == *tiff ]]; then
         local dpi=$( identify -format "%x" "$in_file" )
-        else
+    else
         local dpi=1200
     fi
     echo "Using dpi=$dpi for $in_file"
     local new_width=$( bc <<< "$new_width_inches * $dpi" )
     local old_width=$( identify -format "%w" "$in_file" )
     local old_height=$( identify -format "%h" "$in_file" )
-    local new_height=$( python2 -c "from __future__ import division; from numpy import round; print int(round($new_width * $old_height/$old_width))")
+    local new_height=$( python -c "from __future__ import division; from numpy import round; print int(round($new_width * $old_height/$old_width))")
     # print out some simple information
     local geometry_str="${new_width}x${new_height}"
     echo "Old: $old_width x $old_height. New: $geometry_str (dpi: $dpi)"
@@ -54,7 +61,12 @@ function resize_with_ext(){
     local figure_size="$4"
     local tmp_name="Figure${figure_id}*.${figure_ext}"
     files=$( find "$input_dir" -name $tmp_name)
-    echo "Found [$files] from $tmp_name"
+    if [ ${#files} = "0" ]; then 
+        echo "Found nothing from $tmp_name, skipping"
+        return 
+    else
+        echo "Found [$files] from $tmp_name"
+    fi
     file_tmp=$( echo "$files"  | tail -n 1)
     echo "Resizing $file_tmp"
     resize_single $file_tmp "$figure_size"
