@@ -65,7 +65,7 @@ function resize_files(){
     local input_dir="$1"
     local new_width_inches="$2"
     declare -a file_list=("${!3}")
-    echo "File list is ${file_list[@]}"
+    echo "resize_util:: File list is ${file_list[@]}"
     for i in "${file_list[@]}"
     do
         echo "Working with $i"
