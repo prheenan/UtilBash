@@ -35,10 +35,22 @@ function resize_single(){
     local new_width=$( bc <<< "$new_width_inches * $dpi" )
     local old_width=$( identify -format "%w" "$in_file" )
     local old_height=$( identify -format "%h" "$in_file" )
-    local new_height=$( python -c "from __future__ import division; from numpy import round; print int(round($new_width * $old_height/$old_width))")
+    # get the new height
+    local height_str="from __future__ import division;"
+    local height_str="$height_str from numpy import round;"
+    local height_str="$height_str print int(round($new_width * $old_height/$old_width))"  
+    local new_height=$( python -c "$height_str")
+    # determine if we are within 1 pixel. If so, we don't resize
+    local skip_str="print( (abs($old_height - $new_height) <= 1) and "
+    local skip_str="$skip_str (abs($old_width - $new_width) <= 1))"
+    local skip=$( python -c "$skip_str")
     # print out some simple information
     local geometry_str="${new_width}x${new_height}"
     echo "Old: $old_width x $old_height. New: $geometry_str (dpi: $dpi)"
+    if [ "$skip" = "True" ]; then
+        echo "Old and new geometry within 1 pixel; skipping resiziing"
+        return
+    fi
     # convert and overwrite it. See :
     # imagemagick.org/script/command-line-options.php#resize
     # and
@@ -70,7 +82,6 @@ function resize_with_ext(){
     file_tmp=$( echo "$files"  | tail -n 1)
     echo "Resizing $file_tmp"
     resize_single $file_tmp "$figure_size"
-
 }
 
 function resize_files(){
