@@ -20,9 +20,9 @@ function resize_single(){
     local in_file="${1}"
     local new_width_inches="${2}"
     if [[ "$in_file" == *tiff ]]; then
-	local dpi=$( identify -format "%x" "$in_file" )
-    else
-	local dpi=1200
+        local dpi=$( identify -format "%x" "$in_file" )
+        else
+        local dpi=1200
     fi
     echo "Using dpi=$dpi for $in_file"
     local new_width=$( bc <<< "$new_width_inches * $dpi" )
@@ -68,23 +68,12 @@ function resize_files(){
     echo "File list is ${file_list[@]}"
     for i in "${file_list[@]}"
     do
-	echo "Working with $i"
-	# resize everything...
-	resize_with_ext "$input_dir" "$i" "tiff" "$new_width_inches"
-	resize_with_ext "$input_dir" "$i" "pdf" "$new_width_inches"
+        echo "Working with $i"
+        # resize everything...
+        resize_with_ext "$input_dir" "$i" "jpeg" "$new_width_inches"
+        resize_with_ext "$input_dir" "$i" "tiff" "$new_width_inches"
+        resize_with_ext "$input_dir" "$i" "pdf" "$new_width_inches"
     done		       
 }
 
-function main(){
-    input_dir=${1:-"/Volumes/group/4Patrick/Scratch"}
-    double_w_inches=6.75
-    single_w_inches=3.25
-
-    local files_single=( "1" "2" )
-    local files_double=( "3" "S1" "S2" "S3" "S4" "S5" "S6" "S7" "S8" "S9" "S10" )
-    resize_files "$input_dir"  "$single_w_inches" files_single[@]
-    resize_files "$input_dir" "$double_w_inches" files_double[@]
-}
-
-main $@
 
