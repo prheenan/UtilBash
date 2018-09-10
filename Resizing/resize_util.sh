@@ -20,17 +20,17 @@ dateStr=`date +%Y-%m-%d:%H:%M:%S`
 # I then put it on the path via
 # export PATH="/c/Program Files/ImageMagick-7.0.8-Q16/:$PATH"
 
+def_dpi=600
+def_quality=80
+
 function resize_single(){
     # Arguments:
     #### Arg 1: input file
     #### Arg 2: desired width in inches. Assuming DPI same in x an y
     local in_file="${1}"
     local new_width_inches="${2}"
-    if [[ "$in_file" == *tiff ]]; then
-        local dpi=$( identify -format "%x" "$in_file" )
-    else
-        local dpi=1200
-    fi
+    local dpi="${3:-$def_dpi}"
+    local quality="${4:-$def_quality}"
     echo "Using dpi=$dpi for $in_file"
     local new_width=$( bc <<< "$new_width_inches * $dpi" )
     local old_width=$( identify -format "%w" "$in_file" )
@@ -58,9 +58,9 @@ function resize_single(){
     convert -verbose\
 	    -density $dpi \
 	    $in_file \
-	    -quality 100 \
+	    -quality "$quality" \
 	    -flatten\
-	    -sharpen 0x1\
+	    -sharpen 0.05\
 	    -resize $geometry_str \
 	    -density $dpi \
 	    "${in_file}" 
