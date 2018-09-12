@@ -57,6 +57,13 @@ function copy_dir(){
     _copy_figures "$in_dir" "$out_dir" "*Figure*"
 }
 
+function remove_old_figures(){
+    local out_dir="$1"
+    # delete the old files
+    echo "figure_util.sh:: Removing all figure files from $out_dir"
+    rm -f "${out_dir}"*"Figure"*
+}
+
 function make_figures(){
     # Args:
     #       $1: skip_generation: if 1, then we only copy and do not regenerate
@@ -68,16 +75,13 @@ function make_figures(){
     # make sure the output exists.
     mkdir -p "$out_dir"
     if [ "$skip_generation" -eq 0 ]; then
-        # delete the old files
-        echo "figure_util.sh:: Removing all figure files from $out_dir"
-        rm -f "${out_dir}"*"Figure"*
-        # make new ones
+        # make new figures
         echo "Generating $in_dir"
         generate_dir "$in_dir"
         echo ""
     else
         echo "figure_util.sh:: skipping generation for $in_dir, just copying."
     fi
-    # copy the resulting stuff. 
+    # copy the resulting stuff.
     copy_dir "${@:2}"
 }
