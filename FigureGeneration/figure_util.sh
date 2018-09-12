@@ -64,11 +64,20 @@ function make_figures(){
     #       $3: output directory, see copy-dir
     local skip_generation="$1"
     local in_dir="$2"
+    local out_dir="$3"
+    # make sure the output exists.
+    mkdir -p "$out_dir"
     if [ "$skip_generation" -eq 0 ]; then
+        # delete the old files
+        echo "figure_util.sh:: Removing all figure files from $out_dir"
+        rm -f "${out_dir}"*"Figure"*
+        # make new ones
+        echo "Generating $in_dir"
         generate_dir "$in_dir"
         echo ""
     else
         echo "figure_util.sh:: skipping generation for $in_dir, just copying."
     fi
+    # copy the resulting stuff. 
     copy_dir "${@:2}"
 }
