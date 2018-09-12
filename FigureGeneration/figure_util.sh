@@ -13,6 +13,8 @@ dateStr=`date +%Y-%m-%d:%H:%M:%S`
 
 
 function generate_dir(){
+    # Args:
+    #       $1: input directory, run *all* things like '*main*.py' from here.
     local in_dir="$1"
     local args="${@:2}"
     local current=$(pwd)
@@ -38,6 +40,7 @@ function generate_dir(){
 }
 
 function _copy_figures(){
+    # see: copy_dir
     local in_dir="$1"
     local out_dir="$2"
     local name="$3"
@@ -45,6 +48,9 @@ function _copy_figures(){
 }
 
 function copy_dir(){
+    # Args:
+    #       $1: input directory, copy all files like *Figure* from here
+    #       $2: output directory, where to copy the figures
     local in_dir="$1"
     local out_dir="$2"
     mkdir -p "$out_dir"
@@ -52,10 +58,14 @@ function copy_dir(){
 }
 
 function make_figures(){
+    # Args:
+    #       $1: skip_generation: if 1, then we only copy and do not regenerate
+    #       $2: input directory, search for *main*.py here. See  generate_dir
+    #       $3: output directory, see copy-dir
     local skip_generation="$1"
     local in_dir="$2"
     if [ "$skip_generation" -eq 0 ]; then
-        #generate_dir "$in_dir"
+        generate_dir "$in_dir"
         echo ""
     else
         echo "figure_util.sh:: skipping generation for $in_dir, just copying."
