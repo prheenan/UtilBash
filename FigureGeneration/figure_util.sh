@@ -11,6 +11,22 @@ dateStr=`date +%Y-%m-%d:%H:%M:%S`
 
 # Description: Used to generate figures
 
+function echo_abs_dir(){
+    local in_dir="$1"
+    cd "$in_dir"
+    abs=$(pwd)
+    echo "$abs"
+}
+
+function generate_from_input_dir(){
+    # Args:
+    #       $1: see generate_dir
+    #       $2: passed as input to --base 
+    local dir_with_main_dot_py="$1"
+    local input_dir="$2"
+    local abs_input_dir=$(echo_abs_dir "$input_dir")
+    generate_dir "$dir_with_main_dot_py" --base "$abs_input_dir/"
+}
 
 function generate_dir(){
     # Args:
@@ -32,7 +48,7 @@ function generate_dir(){
                 python "$to_run"
             else
                echo "$base_cmd with [$args]"
-               python "$to_run" "$args"
+               python "$to_run" $args
             fi
             cd - > /dev/null
         done
