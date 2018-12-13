@@ -11,6 +11,22 @@ dateStr=`date +%Y-%m-%d:%H:%M:%S`
 
 # Description: Used to generate figures
 
+function echo_abs_dir(){
+    local in_dir="$1"
+    cd "$in_dir"
+    abs=$(pwd)
+    echo "$abs"
+}
+
+function generate_from_input_dir(){
+    # Args:
+    #       $1: see generate_dir
+    #       $2: passed as input to --base 
+    local dir_with_main_dot_py="$1"
+    local input_dir="$2"
+    local abs_input_dir=$(echo_abs_dir "$input_dir")
+    generate_dir "$dir_with_main_dot_py" --base "$abs_input_dir/"
+}
 
 function generate_dir(){
     # Args:
@@ -18,23 +34,23 @@ function generate_dir(){
     local in_dir="$1"
     local args="${@:2}"
     local current=$(pwd)
-    cd $in_dir
+    cd $in_dir > /dev/null
     local files=$( find . -name "*main*.py" )
     for f in $files
         do
             local dir_tmp=$(dirname "$f")
             local to_run=$(basename "$f")
-            cd "$dir_tmp"
-            local dir_abs=$(pwd)
+            cd "$dir_tmp" > /dev/null
+            local dir_abs=$(pwd) 
             local base_cmd="figure_util.sh:: Running $to_run in $dir_abs"
             if [ ${#args} -eq 0 ]; then
                 echo "$base_cmd without args"
                 python "$to_run"
             else
                echo "$base_cmd with [$args]"
-               python "$to_run" "$args"
+               python "$to_run" $args
             fi
-            cd -
+            cd - > /dev/null
         done
     cd $current
 }
@@ -53,8 +69,10 @@ function copy_dir(){
     #       $2: output directory, where to copy the figures
     local in_dir="$1"
     local out_dir="$2"
+    local format="*Figure*"
     mkdir -p "$out_dir"
-    _copy_figures "$in_dir" "$out_dir" "*Figure*"
+    echo "figure_util.sh:: copying figures like $format from $in_dir to $out_dir"
+    _copy_figures "$in_dir" "$out_dir" "$format"
 }
 
 function remove_old_figures(){
