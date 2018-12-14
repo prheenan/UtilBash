@@ -41,4 +41,5 @@ rsync -zarv \
      --exclude="*.jpeg" \
      --exclude="*.pkl" \
      --prune-empty-dirs \
+     --delete \
      ./ "${output_abs}"
