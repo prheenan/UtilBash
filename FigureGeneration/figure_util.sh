@@ -28,6 +28,10 @@ function generate_from_input_dir(){
     generate_dir "$dir_with_main_dot_py" --base "$abs_input_dir/"
 }
 
+function rm_pkls(){
+    find "$1" -name "*.pkl" | xargs rm -f
+}
+
 function generate_dir(){
     # Args:
     #       $1: input directory, run *all* things like '*main*.py' from here.
