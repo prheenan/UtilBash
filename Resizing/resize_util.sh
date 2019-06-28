@@ -71,6 +71,7 @@ function resize_with_ext(){
     local figure_id="$2"
     local figure_ext="$3"
     local figure_size="$4"
+    local dpi="${5:-$def_dpi}"
     local tmp_name="Figure${figure_id}*.${figure_ext}"
     files=$( find "$input_dir" -name $tmp_name)
     if [ ${#files} = "0" ]; then 
@@ -81,21 +82,22 @@ function resize_with_ext(){
     fi
     file_tmp=$( echo "$files"  | tail -n 1)
     echo "Resizing $file_tmp"
-    resize_single $file_tmp "$figure_size"
+    resize_single $file_tmp "$figure_size" "$dpi"
 }
 
 function resize_files(){
     local input_dir="$1"
     local new_width_inches="$2"
     declare -a file_list=("${!3}")
+    local dpi="${4:-$def_dpi}"
     echo "resize_util:: File list is ${file_list[@]}"
     for i in "${file_list[@]}"
     do
-        echo "Working with $i"
+        echo "Working with $i ($new_width_inches, $dpi)"
         # resize everything...
-        resize_with_ext "$input_dir" "$i" "jpeg" "$new_width_inches"
-        resize_with_ext "$input_dir" "$i" "tiff" "$new_width_inches"
-        resize_with_ext "$input_dir" "$i" "pdf" "$new_width_inches"
+        resize_with_ext "$input_dir" "$i" "jpeg" "$new_width_inches" $dpi
+        resize_with_ext "$input_dir" "$i" "tiff" "$new_width_inches" $dpi
+        resize_with_ext "$input_dir" "$i" "pdf" "$new_width_inches" $dpi
     done		       
 }
 
