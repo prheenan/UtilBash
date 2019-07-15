@@ -72,13 +72,19 @@ function resize_with_ext(){
     local figure_ext="$3"
     local figure_size="$4"
     local dpi="${5:-$def_dpi}"
-    local tmp_name="Figure${figure_id}*.${figure_ext}"
+    local tmp_name="Figure*${figure_id}*.${figure_ext}"
     files=$( find "$input_dir" -name $tmp_name)
-    if [ ${#files} = "0" ]; then 
+	local n_found=$( echo "$files" | wc -l)
+	local file_str_len=${#files} 
+	echo $n_found
+    if [ $n_found = "0" ] || [ $file_str_len = "0" ]; then 
         echo "Found nothing from $tmp_name, skipping"
         return 
-    else
+    elif [ $n_found = "1" ]; then 
         echo "Found [$files] from $tmp_name"
+	else 
+		echo "For $tmp_name, found more than one file ($files). Skipping"
+		return 
     fi
     file_tmp=$( echo "$files"  | tail -n 1)
     echo "Resizing $file_tmp"
