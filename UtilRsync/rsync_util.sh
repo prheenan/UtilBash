@@ -37,6 +37,7 @@ rsync -zarv \
      "${@:3}" \
      --include="*.txt" \
      --include="*.pxp" \
+	 --include="*.ibw" \
      --exclude="*.png" \
      --exclude="*.jpeg" \
      --exclude="*.pkl" \

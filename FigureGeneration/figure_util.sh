@@ -64,7 +64,7 @@ function _copy_figures(){
     local in_dir="$1"
     local out_dir="$2"
     local name="$3"
-    find $in_dir -type f -name "$name" -exec cp {} "$out_dir" \;
+    find $in_dir -type f \( -name "$name"  ! -name "*.py*" ! -name "*.sh" \) -exec cp {} "$out_dir" \;
 }
 
 function copy_dir(){
