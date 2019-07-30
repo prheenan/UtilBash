@@ -100,7 +100,6 @@ function make_figures(){
         # make new figures
         echo "Generating $in_dir"
         generate_dir "$in_dir"
-        echo ""
     else
         echo "figure_util.sh:: skipping generation for $in_dir, just copying."
     fi

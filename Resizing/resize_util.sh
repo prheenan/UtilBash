@@ -76,7 +76,6 @@ function resize_with_ext(){
     files=$( find "$input_dir" -name $tmp_name)
 	local n_found=$( echo "$files" | wc -l)
 	local file_str_len=${#files} 
-	echo $n_found
     if [ $n_found = "0" ] || [ $file_str_len = "0" ]; then 
         echo "Found nothing from $tmp_name, skipping"
         return 
