@@ -38,11 +38,12 @@ function resize_single(){
     # get the new height
     local height_str="from __future__ import division;"
     local height_str="$height_str from numpy import round;"
-    local height_str="$height_str print int(round($new_width * $old_height/$old_width))"  
+    local height_str="$height_str print(int(round($new_width * $old_height/$old_width)))"  
     local new_height=$( python -c "$height_str")
     # determine if we are within 1 pixel. If so, we don't resize
     local skip_str="print( (abs($old_height - $new_height) <= 1) and "
     local skip_str="$skip_str (abs($old_width - $new_width) <= 1))"
+	echo "resize_util.sh:: running with $skip_str"
     local skip=$( python -c "$skip_str")
     # print out some simple information
     local geometry_str="${new_width}x${new_height}"
