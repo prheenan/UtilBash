@@ -104,6 +104,7 @@ function resize_files(){
         resize_with_ext "$input_dir" "$i" "jpeg" "$new_width_inches" $dpi
         resize_with_ext "$input_dir" "$i" "tiff" "$new_width_inches" $dpi
         resize_with_ext "$input_dir" "$i" "pdf" "$new_width_inches" $dpi
+        resize_with_ext "$input_dir" "$i" "png" "$new_width_inches" $dpi
     done		       
 }
 
